@@ -1,6 +1,6 @@
 # CMS Frontend — Course Management System
 
-React + Vite + Tailwind CSS se bana hua frontend for Student Course Management System.
+Frontend for Student Course Management System in React + Vite + Tailwind CSS.
 
 ---
 
@@ -22,10 +22,10 @@ React + Vite + Tailwind CSS se bana hua frontend for Student Course Management S
 # 1. Install dependencies
 npm install
 
-# 2. .env file banao
+# 2. .env file
 cp .env.example .env
 
-# 3. Dev server start karo
+# 3. Dev server start
 npm run dev
 ```
 
@@ -34,7 +34,7 @@ npm run dev
 VITE_API_URL=http://localhost:5000/api/v1
 ```
 
-> Backend `http://localhost:5000` pe chal raha hona chahiye pehle.
+> Backend should be running at `http://localhost:5000`.
 
 ---
 
@@ -142,7 +142,7 @@ cms-frontend/
 /grades         → GradesPage      (protected)
 ```
 
-Protected routes — agar token nahi hai toh `/login` pe redirect hoga automatically.
+Protected routes — Redirect to `/login` if you dont have token.
 
 ---
 
@@ -153,24 +153,24 @@ User logs in
     ↓
 POST /api/v1/auth/login
     ↓
-token → localStorage mein save
+token → saved at localStorage
     ↓
-AuthContext mein user set hota hai
+User set at AuthContext
     ↓
-Dashboard pe redirect
+Dashboard redirect
 ```
 
-**Token kaise attach hota hai:**  
-`api/axios.js` mein request interceptor har API call mein automatically `Authorization: Bearer <token>` header add karta hai.
+**How token is attached:**  
+`api/axios.js` request interceptor will automatically add `Authorization: Bearer <token>` header add karta hai.
 
-**401 aane par:**  
-Response interceptor token delete karke `/login` pe bhej deta hai.
+**When reaching 401:**  
+Redirect to `/logic` on token delete.
 
 ---
 
 ## API Layer
 
-Har module ka alag file hai `src/api/` mein:
+Every module is in `src/api/`:
 
 ```js
 // example — students.js
@@ -181,14 +181,14 @@ export const deleteStudent = (id) => api.delete(`/students/${id}`);
 ```
 
 **Important fixes:**
-- `enrollment_id` ko `parseInt()` karke bhejo — backend integer expect karta hai
-- Backend response wrapped hota hai — `res.data?.data || res.data` pattern use karo
+- Send `enrollment_id` to `parseInt()` — backend expects integer
+- Backend response is wrapped — Use `res.data?.data || res.data`
 
 ---
 
 ## Custom Hooks
 
-Har module ka hook data fetch + CRUD actions handle karta hai:
+Module hook handles data fetch + CRUD actions:
 
 ```js
 const { students, loading, error, addStudent, editStudent, removeStudent } = useStudents();
@@ -221,7 +221,7 @@ const { students, loading, error, addStudent, editStudent, removeStudent } = use
 ### `Modal`
 ```jsx
 <Modal
-  isOpen={showModal}  // boolean — zaruri hai
+  isOpen={showModal}  // boolean — required
   title="Add Student"
   onClose={closeModal}
 >
@@ -229,7 +229,7 @@ const { students, loading, error, addStudent, editStudent, removeStudent } = use
 </Modal>
 ```
 
-> `isOpen` prop pass karna zaroori hai — warna modal kabhi nahi dikhega.
+> Pass `isOpen` prop.
 
 ### `Toast`
 ```jsx
@@ -252,17 +252,15 @@ const { students, loading, error, addStudent, editStudent, removeStudent } = use
 
 ## Role System
 
-Signup pe `role: "student"` ya `role: "admin"` choose kar sakte hain.
+Choose `role: "student"` or `role: "admin"` on signup.
 
 ```js
 // AuthContext se
 const { isAdmin, isStudent } = useAuth();
 ```
 
-- **Admin** — sab kuch dekh aur manage kar sakta hai
-- **Student** — limited access, apne grades aur enrollments dekh sakta hai
-
-Sidebar mein `adminOnly: true` links sirf admin ko dikhte hain.
+- **Admin** — handles everything
+- **Student** — limited access, can view enrollments and grades
 
 ---
 
@@ -270,12 +268,12 @@ Sidebar mein `adminOnly: true` links sirf admin ko dikhte hain.
 
 | Issue | Fix |
 |---|---|
-| `data.filter is not a function` | Backend wrapped response deta hai — `res.data?.data \|\| res.data` use karo |
-| `departments.map is not a function` | Same — array extract karo pehle |
-| `enrollment_id is not valid JSON` | `parseInt(enrollment_id)` karo before API call |
-| Modal nahi khulta | `isOpen={showModal}` prop pass karna zaroori hai |
-| Professor delete 500 error | Foreign key — pehle `UPDATE courses SET professor_id = NULL` karo |
-| `editX is not a function` | Hook mein function missing tha — update karo |
+| `data.filter is not a function` | Backend gives wrapped response — Use `res.data?.data \|\| res.data` |
+| `departments.map is not a function` | Same — array extract first |
+| `enrollment_id is not valid JSON` | `parseInt(enrollment_id)` before API call |
+| Modal nahi khulta | `isOpen={showModal}` prop pass |
+| Professor delete 500 error | Foreign key — `UPDATE courses SET professor_id = NULL` |
+| `editX is not a function` | Missing hook — Update |
 
 ---
 
