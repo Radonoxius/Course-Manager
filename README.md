@@ -32,7 +32,7 @@ It supports:
 |---|---|
 | Runtime | Node.js |
 | Framework | Express.js |
-| Database | PostgreSQL |
+| Database | MySQL |
 | Authentication | JWT (jsonwebtoken) |
 | Security | Helmet, CORS |
 | Logging | Morgan |
