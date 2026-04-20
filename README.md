@@ -2,7 +2,7 @@
 
 A production-ready RESTful API for managing academic entities such as students, professors, departments, courses, semesters, enrollments, and grades.
 
-Built using **Node.js**, **Express.js**, and **PostgreSQL** with scalable modular architecture.
+Built using **Node.js**, **Express.js**, and **MySQL** with scalable modular architecture.
 
 ---
 
